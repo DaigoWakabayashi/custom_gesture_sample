@@ -1,115 +1,226 @@
 import 'package:flutter/material.dart';
 
+const Color darkBlue = Color.fromARGB(255, 18, 32, 47);
+late final DateTime startedAt;
+
+String runtime() => DateTime.now().difference(startedAt).toString();
+
 void main() {
+  startedAt = DateTime.now();
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
 
-  // This widget is the root of your application.
+class _MyAppState extends State<MyApp> {
+  bool _singleTaps = true;
+  bool _doubleTaps = true;
+  bool _pans = true;
+  bool _longPresses = true;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+      theme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: darkBlue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Click anywhere and check the logs!',
+              style: TextStyle(color: darkBlue)),
+          backgroundColor: Colors.white,
+        ),
+        body: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            return Stack(
+              children: <Widget>[
+                Positioned(
+                  height: constraints.maxHeight,
+                  width: constraints.maxWidth,
+                  child: VerboseGestureDetector(
+                    listenDouble: _doubleTaps,
+                    listenSingle: _singleTaps,
+                    listenPans: _pans,
+                    listenLongPress: _longPresses,
+                  ),
+                ),
+                Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: SizedBox(
+                      height: 200,
+                      width: 300,
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              const Text('Listen to single taps?'),
+                              Checkbox(
+                                onChanged: (bool? newVal) => setState(
+                                    () => _singleTaps = newVal ?? false),
+                                value: _singleTaps,
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              const Text('Listen to double taps?'),
+                              Checkbox(
+                                onChanged: (bool? newVal) => setState(
+                                    () => _doubleTaps = newVal ?? false),
+                                value: _doubleTaps,
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              const Text('Listen to long presses?'),
+                              Checkbox(
+                                onChanged: (bool? newVal) => setState(
+                                    () => _longPresses = newVal ?? false),
+                                value: _longPresses,
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              const Text('Listen to pans?'),
+                              Checkbox(
+                                onChanged: (bool? newVal) =>
+                                    setState(() => _pans = newVal ?? false),
+                                value: _pans,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class VerboseGestureDetector extends StatelessWidget {
+  const VerboseGestureDetector({
+    super.key,
+    required this.listenSingle,
+    required this.listenDouble,
+    required this.listenPans,
+    required this.listenLongPress,
+  });
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  final bool listenSingle;
+  final bool listenDouble;
+  final bool listenPans;
+  final bool listenLongPress;
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    GestureTapDownCallback? onTapDown;
+    GestureTapCallback? onTap;
+    GestureTapUpCallback? onTapUp;
+
+    GestureDragUpdateCallback? onPanUpdate;
+
+    GestureTapDownCallback? onDoubleTapDown;
+    GestureTapCallback? onDoubleTap;
+    GestureTapCancelCallback? onDoubleTapCancel;
+
+    GestureLongPressCallback? onLongPress;
+    GestureLongPressStartCallback? onLongPressStart;
+
+    if (listenSingle) {
+      onTapDown = (TapDownDetails details) {
+        // onTapDown always* fires, even if the TapGestureRecognizer does not
+        // emerge victorious from the Gesture Arena. For this reason, do not
+        // put code in here that should be circumvented by a double-click or
+        // a long press.
+        //
+        // onTapDown technically only ALMOST always fires, because specific
+        // scenarios like a very-fast double tap can be recognized quickly
+        // enough that onTapDown is never called.
+        print('[TAP DOWN] ${details.localPosition} @ ${runtime()}');
+      };
+      onTap = () {
+        // onTap only fires if the TapGestureRecognizer emerges victorious from
+        // the Gesture Arena, so it is safe to put code here that should NOT
+        // run if the user is actually halfway en-route to a double click.
+        print('[TAP] @ ${runtime()}');
+      };
+      onTapUp = (TapUpDetails details) {
+        // onTapUp is less frequently used, but always fires, even if the
+        // TapGestureRecognizer does not emerge victorious from the Gesture
+        // Arena. For this reason, do not put code in here that should be
+        // circumvented by a double-click or a long press.
+        print('[TAP UP] ${details.localPosition} @ ${runtime()}');
+      };
+    }
+
+    if (listenPans) {
+      onPanUpdate = (DragUpdateDetails details) {
+        print('[PAN UPDATE] ${details.localPosition} @ ${runtime()}');
+      };
+    }
+
+    if (listenDouble) {
+      onDoubleTapDown = (TapDownDetails details) {
+        // onTapDown always fires, even if the TapGestureRecognizer does not
+        // emerge victorious from the Gesture Arena. For this reason, do not
+        // put code in here that should be circumvented by a double-click or
+        // a long press.
+        print('[DOUBLE TAP DOWN] ${details.localPosition} @ ${runtime()}');
+      };
+      onDoubleTap = () {
+        // onTap only fires if the TapGestureRecognizer emerges victorious from
+        // the Gesture Arena, so it is safe to put code here that should NOT
+        // run if the user is actually halfway en-route to a double click.
+        print('[DOUBLE TAP] @ ${runtime()}');
+      };
+      onDoubleTapCancel = () {
+        // Fired when a potential double tap concedes defeat within the
+        // Gesture Arena.
+        print('[DOUBLE TAP CANCEL] @ ${runtime()}');
+      };
+    }
+
+    if (listenLongPress) {
+      onLongPress = () {
+        print('[LONGPRESS] @ ${runtime()}');
+      };
+      onLongPressStart = (LongPressStartDetails details) {
+        print('[LONGPRESS START] @ ${runtime()}');
+      };
+    }
+
+    return GestureDetector(
+      // [SINGLE-TAP]
+      onTapDown: onTapDown,
+      onTap: onTap,
+      onTapUp: onTapUp,
+      // [DOUBLE-TAP]
+      onDoubleTapDown: onDoubleTapDown,
+      onDoubleTap: onDoubleTap,
+      onDoubleTapCancel: onDoubleTapCancel,
+      // [LONG-PRESS]
+      onLongPress: onLongPress,
+      onLongPressStart: onLongPressStart,
+      // [PAN]
+      onPanUpdate: onPanUpdate,
     );
   }
 }

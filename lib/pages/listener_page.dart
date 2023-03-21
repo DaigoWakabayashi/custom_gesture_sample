@@ -2,14 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
-class ListenerPage extends StatefulWidget {
+class ListenerPage extends StatelessWidget {
   const ListenerPage({super.key});
 
-  @override
-  State<ListenerPage> createState() => _ListenerPageState();
-}
-
-class _ListenerPageState extends State<ListenerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

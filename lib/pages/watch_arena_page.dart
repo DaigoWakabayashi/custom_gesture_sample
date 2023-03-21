@@ -3,16 +3,9 @@ import 'dart:developer';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class WatchGestureArenaPage extends StatefulWidget {
+class WatchGestureArenaPage extends StatelessWidget {
   const WatchGestureArenaPage({super.key});
 
-  @override
-  State<WatchGestureArenaPage> createState() {
-    return _WatchGestureArenaPageState();
-  }
-}
-
-class _WatchGestureArenaPageState extends State<WatchGestureArenaPage> {
   @override
   Widget build(BuildContext context) {
     // GestureArena の状況をロギング

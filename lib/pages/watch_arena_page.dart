@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class WatchGestureArenaPage extends StatelessWidget {
@@ -8,11 +7,6 @@ class WatchGestureArenaPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // GestureArena の状況をロギング
-    debugPrintGestureArenaDiagnostics = true;
-    // Arenaで勝利したコールバックの詳細をロギング
-    debugPrintRecognizerCallbacksTrace = true;
-
     return Scaffold(
       appBar: AppBar(title: const Text('WatchGestureArenaPage')),
       body: GestureDetector(

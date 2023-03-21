@@ -1,5 +1,6 @@
 import 'package:custom_gesture_sample/pages/listener_page.dart';
 import 'package:custom_gesture_sample/pages/watch_arena_page.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,9 +16,14 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,6 +32,18 @@ class MyHomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            // GestureArena の状況をロギングするか
+            Switch(
+              value: debugPrintGestureArenaDiagnostics,
+              onChanged: (value) =>
+                  setState(() => debugPrintGestureArenaDiagnostics = value),
+            ),
+            // GestureArena で勝利した Recognizer のコールバックをロギング
+            Switch(
+              value: debugPrintRecognizerCallbacksTrace,
+              onChanged: (value) =>
+                  setState(() => debugPrintRecognizerCallbacksTrace = value),
+            ),
             ElevatedButton(
               onPressed: () =>
                   push(context, page: const WatchGestureArenaPage()),

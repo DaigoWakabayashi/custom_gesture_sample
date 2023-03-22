@@ -2,7 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 /// 小領域を単一タップしか受け付けなくする Widget.
-
+/// child 内で複数のタップイベントが同時に発生した場合、
+/// 最初に接地した指のイベントだけを処理する
 class SingleTouchScope extends StatelessWidget {
   const SingleTouchScope({super.key, required this.child});
 

@@ -12,15 +12,15 @@ class TripleTapGestureDetector extends StatelessWidget {
   });
 
   final Widget child;
-  final GestureTapCallback onTripleTap;
+  final VoidCallback onTripleTap;
 
   @override
   Widget build(BuildContext context) {
     return RawGestureDetector(
       gestures: {
-        TripleTapGestureRecognizer:
-            GestureRecognizerFactoryWithHandlers<TripleTapGestureRecognizer>(
-          () => TripleTapGestureRecognizer(debugOwner: this),
+        _TripleTapGestureRecognizer:
+            GestureRecognizerFactoryWithHandlers<_TripleTapGestureRecognizer>(
+          () => _TripleTapGestureRecognizer(debugOwner: this),
           (instance) => instance.onTripleTap = onTripleTap,
         ),
       },
@@ -30,29 +30,30 @@ class TripleTapGestureDetector extends StatelessWidget {
 }
 
 /// 3連タップを検出する GestureRecognizer
-class TripleTapGestureRecognizer extends OneSequenceGestureRecognizer {
-  TripleTapGestureRecognizer({super.debugOwner});
+class _TripleTapGestureRecognizer extends OneSequenceGestureRecognizer {
+  _TripleTapGestureRecognizer({super.debugOwner});
 
+  // カウントダウンタイマー
   Timer? timer;
+  // タップ数
   int tapCount = 0;
-
+  // コールバック
   VoidCallback? onTripleTap;
 
   /// ポインタ（指）が追加された時
   @override
   void addAllowedPointer(PointerEvent event) {
-    startTrackingPointer(event.pointer);
-    GestureBinding.instance.pointerRouter.addRoute(
-      event.pointer,
-      (event) {
-        if (event is PointerDownEvent) {
-          _processPointerDownEvent(event);
-        } else if (event is PointerUpEvent) {
-          _processPointerUpEvent(event);
-        }
-      },
-      event.transform,
-    );
+    startTrackingPointer(event.pointer); // GestureArena への参加
+  }
+
+  /// ポインタ（指）のイベントを検知しハンドリング
+  @override
+  void handleEvent(PointerEvent event) {
+    if (event is PointerDownEvent) {
+      _handleDownEvent(event);
+    } else if (event is PointerUpEvent) {
+      _handleUpEvent(event);
+    }
   }
 
   @override
@@ -62,12 +63,12 @@ class TripleTapGestureRecognizer extends OneSequenceGestureRecognizer {
   }
 
   /// 指が画面についた時：タイムアウトタイマーをリセットする
-  void _processPointerDownEvent(PointerDownEvent event) {
+  void _handleDownEvent(PointerDownEvent event) {
     _resetCountdown();
   }
 
   /// 指が画面から離れた時：カウントアップして 3 になったらコールバックを呼び出す
-  void _processPointerUpEvent(PointerUpEvent event) {
+  void _handleUpEvent(PointerUpEvent event) {
     tapCount++;
     if (tapCount == 3) {
       tapCount = 0;
@@ -99,7 +100,4 @@ class TripleTapGestureRecognizer extends OneSequenceGestureRecognizer {
 
   @override
   void didStopTrackingLastPointer(int pointer) {}
-
-  @override
-  void handleEvent(PointerEvent event) {}
 }

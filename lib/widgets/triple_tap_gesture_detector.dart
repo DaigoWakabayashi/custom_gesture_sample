@@ -30,7 +30,7 @@ class TripleTapGestureDetector extends StatelessWidget {
 }
 
 /// 3連タップを検出する GestureRecognizer
-class TripleTapGestureRecognizer extends GestureRecognizer {
+class TripleTapGestureRecognizer extends OneSequenceGestureRecognizer {
   TripleTapGestureRecognizer({super.debugOwner});
 
   Timer? timer;
@@ -38,9 +38,10 @@ class TripleTapGestureRecognizer extends GestureRecognizer {
 
   VoidCallback? onTripleTap;
 
-  /// ポインタ（指）が追加された時、ルートの GestureBinding に
+  /// ポインタ（指）が追加された時
   @override
   void addAllowedPointer(PointerEvent event) {
+    startTrackingPointer(event.pointer);
     GestureBinding.instance.pointerRouter.addRoute(
       event.pointer,
       (event) {
@@ -95,4 +96,10 @@ class TripleTapGestureRecognizer extends GestureRecognizer {
 
   @override
   String get debugDescription => 'Triple Tap';
+
+  @override
+  void didStopTrackingLastPointer(int pointer) {}
+
+  @override
+  void handleEvent(PointerEvent event) {}
 }

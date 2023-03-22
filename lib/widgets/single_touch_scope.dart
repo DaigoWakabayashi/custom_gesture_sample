@@ -1,7 +1,33 @@
 import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
 
-/// 複数ポインタの同時押しを禁止する Recognizer
-class SingleTouchRecognizer extends OneSequenceGestureRecognizer {
+/// 小領域を単一タップしか受け付けなくする Widget.
+
+class SingleTouchScope extends StatelessWidget {
+  const SingleTouchScope({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return RawGestureDetector(
+      gestures: <Type, GestureRecognizerFactory>{
+        _SingleTouchRecognizer:
+            GestureRecognizerFactoryWithHandlers<_SingleTouchRecognizer>(
+          () => _SingleTouchRecognizer(),
+          (_) {},
+        )
+      },
+      child: child,
+    );
+  }
+}
+
+/// 複数ポインタの同時押しを禁止する Recognizer.
+/// child 内にある Recognizer とタップイベントの勝負をして、
+/// 1 本目の指だったら確実に 子 のタップイベントを勝利させ
+/// 2 本目以降の指だったら確実にタップイベントを奪い無効化する
+class _SingleTouchRecognizer extends OneSequenceGestureRecognizer {
   // 指（ポインタ）の識別子
   int _p = 0;
 

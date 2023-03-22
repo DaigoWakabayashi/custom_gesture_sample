@@ -64,16 +64,16 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
               onPressed: () => push(
                 context,
-                const TripleTapGestureRecognizerPage(),
+                const SingleTouchRecognizerPage(),
               ),
-              child: const Text('3. TripleTapGestureRecognizer'),
+              child: const Text('3. SingleTouchRecognizer'),
             ),
             ElevatedButton(
               onPressed: () => push(
                 context,
-                const SingleTouchRecognizerPage(),
+                const TripleTapGestureRecognizerPage(),
               ),
-              child: const Text('4. SingleTouchRecognizer'),
+              child: const Text('4. TripleTapGestureRecognizer'),
             ),
           ],
         ),

@@ -1,5 +1,6 @@
-import 'package:custom_gesture_sample/pages/single_touch_recognizer_page.dart';
 import 'package:custom_gesture_sample/pages/listener_page.dart';
+import 'package:custom_gesture_sample/pages/single_touch_recognizer_page.dart';
+import 'package:custom_gesture_sample/pages/triple_tap_gesture_recognizer_page.dart';
 import 'package:custom_gesture_sample/pages/watch_arena_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,11 @@ class _MyHomePageState extends State<MyHomePage> {
               value: debugPrintRecognizerCallbacksTrace,
               onChanged: (value) =>
                   setState(() => debugPrintRecognizerCallbacksTrace = value),
+            ),
+            ElevatedButton(
+              onPressed: () =>
+                  push(context, page: const TripleTapGestureRecognizerPage()),
+              child: const Text('TripleTapGestureRecognizer'),
             ),
             ElevatedButton(
               onPressed: () =>

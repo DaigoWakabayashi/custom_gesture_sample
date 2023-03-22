@@ -18,17 +18,20 @@ class SingleTouchRecognizerPage extends StatelessWidget {
             (_) {},
           )
         },
-        child: Column(
-          children: [
-            ElevatedButton(
-              onPressed: () => log('A pressed!'),
-              child: const Text('A ボタン'),
-            ),
-            ElevatedButton(
-              onPressed: () => log('B pressed!'),
-              child: const Text('B ボタン'),
-            ),
-          ],
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () => log('A pressed!'),
+                child: const Text('A ボタン'),
+              ),
+              ElevatedButton(
+                onPressed: () => log('B pressed!'),
+                child: const Text('B ボタン'),
+              ),
+            ],
+          ),
         ),
       ),
     );

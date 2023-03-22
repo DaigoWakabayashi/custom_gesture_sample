@@ -1,7 +1,7 @@
 import 'package:custom_gesture_sample/pages/listener_page.dart';
 import 'package:custom_gesture_sample/pages/single_touch_recognizer_page.dart';
 import 'package:custom_gesture_sample/pages/triple_tap_gesture_recognizer_page.dart';
-import 'package:custom_gesture_sample/pages/watch_arena_page.dart';
+import 'package:custom_gesture_sample/pages/watch_gesture_arena_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -45,23 +45,32 @@ class _MyHomePageState extends State<MyHomePage> {
                   setState(() => debugPrintRecognizerCallbacksTrace = value),
             ),
             ElevatedButton(
-              onPressed: () =>
-                  push(context, page: const TripleTapGestureRecognizerPage()),
-              child: const Text('TripleTapGestureRecognizer'),
+              onPressed: () => push(
+                context,
+                const ListenerPage(),
+              ),
+              child: const Text('1. Listener'),
             ),
             ElevatedButton(
-              onPressed: () =>
-                  push(context, page: const SingleTouchRecognizerPage()),
-              child: const Text('SingleTouchRecognizer'),
+              onPressed: () => push(
+                context,
+                const WatchGestureArenaPage(),
+              ),
+              child: const Text('2. GestureArena'),
             ),
             ElevatedButton(
-              onPressed: () =>
-                  push(context, page: const WatchGestureArenaPage()),
-              child: const Text('GestureArena'),
+              onPressed: () => push(
+                context,
+                const TripleTapGestureRecognizerPage(),
+              ),
+              child: const Text('3. TripleTapGestureRecognizer'),
             ),
             ElevatedButton(
-              onPressed: () => push(context, page: const ListenerPage()),
-              child: const Text('Listener'),
+              onPressed: () => push(
+                context,
+                const SingleTouchRecognizerPage(),
+              ),
+              child: const Text('4. SingleTouchRecognizer'),
             ),
           ],
         ),
@@ -70,5 +79,5 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-void push(BuildContext context, {required Widget page}) => Navigator.of(context)
+void push(BuildContext context, Widget page) => Navigator.of(context)
     .push(MaterialPageRoute<void>(builder: (BuildContext context) => page));

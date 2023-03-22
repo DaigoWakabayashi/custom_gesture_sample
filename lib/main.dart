@@ -1,3 +1,4 @@
+import 'package:custom_gesture_sample/pages/single_touch_recognizer_page.dart';
 import 'package:custom_gesture_sample/pages/listener_page.dart';
 import 'package:custom_gesture_sample/pages/watch_arena_page.dart';
 import 'package:flutter/gestures.dart';
@@ -32,17 +33,20 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // GestureArena の状況をロギングするか
             Switch(
               value: debugPrintGestureArenaDiagnostics,
               onChanged: (value) =>
                   setState(() => debugPrintGestureArenaDiagnostics = value),
             ),
-            // GestureArena で勝利した Recognizer のコールバックをロギング
             Switch(
               value: debugPrintRecognizerCallbacksTrace,
               onChanged: (value) =>
                   setState(() => debugPrintRecognizerCallbacksTrace = value),
+            ),
+            ElevatedButton(
+              onPressed: () =>
+                  push(context, page: const SingleTouchRecognizerPage()),
+              child: const Text('SingleTouchRecognizer'),
             ),
             ElevatedButton(
               onPressed: () =>

@@ -20,10 +20,8 @@ class TripleTapGestureDetector extends StatelessWidget {
       gestures: {
         TripleTapGestureRecognizer:
             GestureRecognizerFactoryWithHandlers<TripleTapGestureRecognizer>(
-          () => TripleTapGestureRecognizer(),
-          (TripleTapGestureRecognizer instance) {
-            instance.onTripleTap = onTripleTap;
-          },
+          () => TripleTapGestureRecognizer(debugOwner: this),
+          (instance) => instance.onTripleTap = onTripleTap,
         ),
       },
       child: child,
@@ -33,19 +31,60 @@ class TripleTapGestureDetector extends StatelessWidget {
 
 /// 3連タップを検出する GestureRecognizer
 class TripleTapGestureRecognizer extends GestureRecognizer {
-  Timer? countdown;
-  int tapCounter = 0;
-  Duration countdownDuration = const Duration(milliseconds: 500);
+  TripleTapGestureRecognizer({super.debugOwner});
+
+  Timer? timer;
+  int tapCount = 0;
 
   VoidCallback? onTripleTap;
 
+  /// ポインタ（指）が追加された時、ルートの GestureBinding に
   @override
   void addAllowedPointer(PointerEvent event) {
     GestureBinding.instance.pointerRouter.addRoute(
       event.pointer,
-      _handleEvent,
+      (event) {
+        if (event is PointerDownEvent) {
+          _processPointerDownEvent(event);
+        } else if (event is PointerUpEvent) {
+          _processPointerUpEvent(event);
+        }
+      },
       event.transform,
     );
+  }
+
+  @override
+  void dispose() {
+    _stopCountdown();
+    super.dispose();
+  }
+
+  /// 指が画面についた時：タイムアウトタイマーをリセットする
+  void _processPointerDownEvent(PointerDownEvent event) {
+    _resetCountdown();
+  }
+
+  /// 指が画面から離れた時：カウントアップして 3 になったらコールバックを呼び出す
+  void _processPointerUpEvent(PointerUpEvent event) {
+    tapCount++;
+    if (tapCount == 3) {
+      tapCount = 0;
+      _stopCountdown();
+      onTripleTap?.call();
+    }
+  }
+
+  void _resetCountdown() {
+    timer?.cancel();
+    timer = Timer(kDoubleTapTimeout, () {
+      tapCount = 0;
+    });
+  }
+
+  void _stopCountdown() {
+    timer?.cancel();
+    timer = null;
   }
 
   @override
@@ -56,47 +95,4 @@ class TripleTapGestureRecognizer extends GestureRecognizer {
 
   @override
   String get debugDescription => 'Triple Tap';
-
-  @override
-  void dispose() {
-    _stopCountdown();
-    super.dispose();
-  }
-
-  void _handleEvent(PointerEvent event) {
-    if (event is PointerDownEvent) {
-      _processPointerDownEvent(event);
-    } else if (event is PointerUpEvent) {
-      _processPointerUpEvent(event);
-    }
-  }
-
-  void _processPointerDownEvent(PointerDownEvent event) {
-    _resetCountdown();
-  }
-
-  void _processPointerUpEvent(PointerUpEvent event) {
-    tapCounter++;
-    if (tapCounter == 3) {
-      _resetCounter();
-      _stopCountdown();
-      onTripleTap?.call();
-    }
-  }
-
-  void _resetCountdown() {
-    countdown?.cancel();
-    countdown = Timer(countdownDuration, () {
-      tapCounter = 0;
-    });
-  }
-
-  void _resetCounter() {
-    tapCounter = 0;
-  }
-
-  void _stopCountdown() {
-    countdown?.cancel();
-    countdown = null;
-  }
 }

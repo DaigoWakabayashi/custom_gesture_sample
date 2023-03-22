@@ -34,6 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            /// スイッチ類
             Switch(
               value: debugPrintGestureArenaDiagnostics,
               onChanged: (value) =>
@@ -44,6 +45,8 @@ class _MyHomePageState extends State<MyHomePage> {
               onChanged: (value) =>
                   setState(() => debugPrintRecognizerCallbacksTrace = value),
             ),
+
+            /// ボタン類
             ElevatedButton(
               onPressed: () => push(
                 context,
